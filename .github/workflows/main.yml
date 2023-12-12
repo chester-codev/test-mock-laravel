@@ -27,7 +27,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
-          coverage: none
+          coverage: xdebug
 
       - name: Setup problem matchers
         run: |
@@ -51,5 +51,14 @@ jobs:
       - name: Generate Key
         run: php artisan key:generate
 
-      - name: Execute tests
-        run: vendor/bin/phpunit
+      - name: Code climate setup
+        run: curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter && chmod +x ./cc-test-reporter
+
+      - name: Code climate run before-build
+        run: ./cc-test-reporter before-build
+
+      - name: Execute tests (Unit and Feature tests) via PHPUnit
+        run: php artisan test --coverage-clover clover.xml --stop-on-failure
+
+      - name: Code climate run after-build
+        run: ./cc-test-reporter after-build -t clover --exit-code $?
