@@ -10,4 +10,9 @@ class TestController extends Controller
     {
         return true;
     }
+
+    function show(Request $request)
+    {
+        return true;
+    }
 }
