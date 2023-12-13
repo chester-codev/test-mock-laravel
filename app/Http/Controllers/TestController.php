@@ -13,6 +13,6 @@ class TestController extends Controller
 
     function show(Request $request)
     {
-        return false;
+        return true;
     }
 }
